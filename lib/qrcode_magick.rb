@@ -15,8 +15,10 @@ module QRCodeMagick
     opts = self.defaults
     self.parse_options(args, opts)
     qrcode = RQRCode::QRCode.new(string, :size => opts[:size], :level => opts[:level])
+    opts[:drawing].stroke(opts[:fg])
+    opts[:drawing].fill(opts[:fg])
     opts[:drawing] = self.generate_drawing(qrcode, opts[:drawing], opts[:scale])
-    opts[:canvas] = self.generate_canvas(qrcode, opts[:scale], opts[:fill]) unless opts[:canvas]
+    opts[:canvas] = self.generate_canvas(qrcode, opts[:scale], opts[:bg]) unless opts[:canvas]
     opts[:drawing].draw(opts[:canvas])
     opts[:canvas].write(opts[:write_to]) if opts[:write_to]
     opts[:canvas]
@@ -28,11 +30,12 @@ module QRCodeMagick
     {
       :size => 4,
       :level => :h,
-      :scale => 2,
+      :scale => 20,
       :write_to => nil,
       :drawing => Magick::Draw.new,
       :canvas => nil,
-      :fill => Magick::HatchFill.new('white')
+      :fg => 'black',
+      :bg => 'white'
     }
   end
   
@@ -45,9 +48,9 @@ module QRCodeMagick
     end
   end
   
-  def self.generate_canvas(qrcode, scale, fill)
+  def self.generate_canvas(qrcode, scale, bg)
     canvas_side = (qrcode.module_count * scale) + (2 * scale)
-    Magick::Image.new(canvas_side, canvas_side, fill)
+    Magick::Image.new(canvas_side, canvas_side){ self.background_color = bg }
   end
   
   def self.generate_drawing(qrcode, drawing, scale)
