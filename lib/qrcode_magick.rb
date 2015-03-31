@@ -1,6 +1,6 @@
 require 'qrcode_magick/version'
 require 'rqrcode'
-require 'RMagick'
+require 'rmagick'
 
 module QRCodeMagick
   

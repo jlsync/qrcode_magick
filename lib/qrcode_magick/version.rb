@@ -1,3 +1,3 @@
 module QrcodeMagick
-  VERSION = "0.0.1.jason"
+  VERSION = "0.0.2.jason"
 end
